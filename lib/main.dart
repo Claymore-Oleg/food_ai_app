@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
 import 'src/view_models/app_view_model.dart';
+import 'src/ui/screens/home_screen.dart';
+import 'src/ui/screens/capture_screen.dart';
+import 'src/ui/screens/result_screen.dart';
+import 'src/ui/screens/history_screen.dart';
 
 void main() {
   runApp(
@@ -16,34 +22,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final _router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (_, __) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/capture',
+          builder: (_, __) => const CaptureScreen(),
+        ),
+        GoRoute(
+          path: '/result',
+          builder: (_, __) => const ResultScreen(),
+        ),
+        GoRoute(
+          path: '/history',
+          builder: (_, __) => const HistoryScreen(),
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
       title: 'Food AI',
       debugShowCheckedModeBanner: false,
+      routerConfig: _router,
       theme: ThemeData(useMaterial3: true),
-      home: const PlaceholderScreen(),
-    );
-  }
-}
-
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final busy = context.watch<AppViewModel>().busy;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Center(
-        child: Text(
-          busy ? 'Working…' : 'Nothing yet',
-          style: const TextStyle(fontSize: 24),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.read<AppViewModel>().setBusy(!busy),
-        child: const Icon(Icons.refresh),
-      ),
     );
   }
 }
